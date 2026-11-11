@@ -8,6 +8,18 @@ export type Layout = "list" | "grid";
 
 const ICONS = { drafts: FileText, scheduled: CalendarClock, live: Radio } as const;
 
+/**
+ * Colour psychology per stage:
+ *  drafts    → warm amber: creativity, ideas still taking shape
+ *  scheduled → violet-indigo: trust and calm, planned and ready
+ *  live      → emerald: success and growth, out in the world
+ */
+export const TONES: Record<TabKey, { pill: string; glow: string; icon: string; badge: string }> = {
+  drafts: { pill: "linear-gradient(135deg, #f0a04b 0%, #d9762f 100%)", glow: "0 6px 18px -8px rgba(217, 118, 47, 0.7)", icon: "text-[#d9762f]", badge: "bg-[#fdf0e1] text-[#a85a1e]" },
+  scheduled: { pill: "linear-gradient(135deg, #8b5cf6 0%, #5b5fe0 100%)", glow: "0 6px 18px -8px rgba(91, 95, 224, 0.7)", icon: "text-[#6d5ae6]", badge: "bg-[#eeebfd] text-[#4c3fbf]" },
+  live: { pill: "linear-gradient(135deg, #22b573 0%, #0e9384 100%)", glow: "0 6px 18px -8px rgba(14, 147, 132, 0.7)", icon: "text-[#13a079]", badge: "bg-[#e3f6ee] text-[#0c7a5e]" },
+};
+
 export type BoardTab = {
   key: TabKey;
   label: string;
@@ -67,8 +79,8 @@ export function PostsBoard({ tabs, initialTab, initialLayout }: { tabs: BoardTab
           {pill && (
             <span
               aria-hidden
-              className={`bg-vivid pointer-events-none absolute top-0 left-0 rounded-full ${animate ? "transition-[transform,width,height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]" : ""}`}
-              style={{ width: pill.w, height: pill.h, transform: `translate(${pill.x}px, ${pill.y}px)` }}
+              className={`pointer-events-none absolute top-0 left-0 rounded-full ${animate ? "transition-[transform,width,height,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]" : ""}`}
+              style={{ width: pill.w, height: pill.h, transform: `translate(${pill.x}px, ${pill.y}px)`, backgroundImage: TONES[tab].pill, boxShadow: `inset 0 1px 0 rgba(255,255,255,0.25), ${TONES[tab].glow}` }}
             />
           )}
           {tabs.map(({ key, label, count }) => {
@@ -84,9 +96,9 @@ export function PostsBoard({ tabs, initialTab, initialLayout }: { tabs: BoardTab
                 onClick={() => pickTab(key)}
                 className={`relative z-10 flex h-10 flex-1 items-center justify-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-200 sm:flex-none ${active ? "text-white" : "text-muted hover:bg-hover hover:text-ink"}`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className={`h-4 w-4 transition-colors duration-200 ${active ? "text-white" : TONES[key].icon}`} />
                 {label}
-                <span className={`rounded-full px-2 text-[11px] font-semibold transition-colors duration-200 ${active ? "bg-white/20 text-white" : "bg-hover text-ink-2"}`}>{count}</span>
+                <span className={`rounded-full px-2 text-[11px] font-semibold transition-colors duration-200 ${active ? "bg-white/25 text-white" : TONES[key].badge}`}>{count}</span>
               </button>
             );
           })}

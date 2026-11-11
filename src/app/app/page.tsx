@@ -41,7 +41,7 @@ function Row({ p, tz, context }: { p: Post; tz: string; context: RetentionContex
   return (
     <div className="group flex items-center gap-4 rounded-2xl px-4 py-4 transition hover:bg-canvas">
       <Link href={`/app/posts/${p.id}`} className="flex min-w-0 flex-1 items-center gap-4">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-hover text-muted">{p.status === "posted" ? <Radio className="h-4 w-4" /> : p.status === "scheduled" ? <CalendarClock className="h-4 w-4" /> : <FileText className="h-4 w-4" />}</span>
+        <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${p.status === "posted" ? "bg-[#e3f6ee] text-[#0c7a5e]" : p.status === "scheduled" ? "bg-[#eeebfd] text-[#4c3fbf]" : "bg-[#fdf0e1] text-[#a85a1e]"}`}>{p.status === "posted" ? <Radio className="h-4 w-4" /> : p.status === "scheduled" ? <CalendarClock className="h-4 w-4" /> : <FileText className="h-4 w-4" />}</span>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="truncate font-semibold text-ink">{p.title || "Untitled post"}</span>
@@ -77,7 +77,7 @@ function Card({ p, tz, context }: { p: Post; tz: string; context: RetentionConte
     <div className="group relative flex flex-col rounded-2xl border border-line bg-surface p-4 transition hover:z-10 focus-within:z-20 hover:-translate-y-0.5 hover:border-line-strong hover:shadow-[var(--shadow-lift)]">
       <Link href={`/app/posts/${p.id}`} className="flex flex-1 flex-col">
         <div className="flex items-center gap-2">
-          <span className={`chip h-6 text-[11px] font-semibold ${p.status === "posted" ? "bg-success-soft text-success" : p.status === "scheduled" ? "bg-brand-soft text-brand-ink" : p.status === "failed" ? "bg-danger-soft text-danger" : "bg-hover text-muted"}`}>
+          <span className={`chip h-6 text-[11px] font-semibold ${p.status === "posted" ? "bg-[#e3f6ee] text-[#0c7a5e]" : p.status === "scheduled" ? "bg-[#eeebfd] text-[#4c3fbf]" : p.status === "failed" ? "bg-danger-soft text-danger" : "bg-[#fdf0e1] text-[#a85a1e]"}`}>
             {p.status === "posted" ? <Radio className="h-3 w-3" /> : p.status === "scheduled" ? <CalendarClock className="h-3 w-3" /> : p.status === "failed" ? <CircleAlert className="h-3 w-3" /> : <FileText className="h-3 w-3" />}
             {p.status === "posted" ? "Live" : p.status === "scheduled" ? "Scheduled" : p.status === "failed" ? "Failed" : "Draft"}
           </span>
