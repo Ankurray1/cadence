@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, CalendarClock, ChevronRight, CircleAlert, ExternalLink, FileText, LayoutGrid, List, Radio } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CalendarClock, ChevronRight, CircleAlert, ExternalLink, FileText, Radio } from "lucide-react";
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { listPosts } from "@/lib/posts";
@@ -9,13 +9,13 @@ import { RowMenu } from "@/components/RowMenu";
 import { ScheduleTimeButton } from "@/components/ScheduleTimeButton";
 import { getRetentionContext, type RetentionContext } from "@/lib/retention";
 import { getMilestones } from "@/lib/milestones";
-import { computeStats } from "@/lib/stats";
 import { JourneyRail } from "@/components/JourneyRail";
 import { CopyPrompt } from "@/components/ui/CopyButton";
 import { FIRST_PROMPT, MCP_URL } from "@/components/ConnectClaude";
 import { SetupHero } from "@/components/onboarding/SetupHero";
 import { getOnboarding } from "@/lib/onboarding";
 import { getAccount, postUrl } from "@/lib/linkedin";
+import { PostsBoard, type TabKey } from "@/components/PostsBoard";
 import type { Post } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -24,11 +24,10 @@ const claudeLink = (prompt: string) => `https://claude.ai/new?q=${encodeURICompo
 const PLAN_PROMPT = "Plan 3 LinkedIn posts for this week (a story, a how-to and an opinion) based on what I’m working on: [one line]. Show them to me, then schedule them in Cadence at 9am on open days.";
 
 const TABS = [
-  { key: "drafts", label: "Drafts", hint: "Ideas in progress", icon: FileText },
-  { key: "scheduled", label: "Scheduled", hint: "Queued to go live", icon: CalendarClock },
-  { key: "live", label: "Live", hint: "Published on LinkedIn", icon: Radio },
+  { key: "drafts", label: "Drafts", hint: "Ideas in progress" },
+  { key: "scheduled", label: "Scheduled", hint: "Queued to go live" },
+  { key: "live", label: "Live", hint: "Published on LinkedIn" },
 ] as const;
-type TabKey = (typeof TABS)[number]["key"];
 
 function greeting(tz: string) {
   const h = Number(new Date().toLocaleString("en-US", { timeZone: tz, hour: "numeric", hour12: false }));
@@ -170,22 +169,17 @@ function Empty({ tab, drafts, scheduled }: { tab: TabKey; drafts: number; schedu
 
 export default async function PostsPage({ searchParams }: { searchParams: Promise<{ tab?: string; view?: string }> }) {
   const user = await requireUser("/app");
-  const [posts, onboarding, acct] = await Promise.all([listPosts(user.id), getOnboarding(user.id), getAccount(user.id)]);
+  const [posts, onboarding, acct, journey, sp] = await Promise.all([listPosts(user.id), getOnboarding(user.id), getAccount(user.id), getMilestones(user.id, user.timezone), searchParams]);
   const groups: Record<TabKey, Post[]> = {
     drafts: posts.filter((p) => p.status === "draft" || p.status === "failed"),
     scheduled: posts.filter((p) => p.status === "scheduled" || p.status === "publishing").sort((a, b) => +new Date(a.scheduled_at!) - +new Date(b.scheduled_at!)),
     live: posts.filter((p) => p.status === "posted"),
   };
-  const sp = await searchParams;
   const requested = sp.tab as TabKey | undefined;
   const layout = sp.view === "grid" ? "grid" : "list";
   const tab: TabKey = requested && requested in groups ? requested : groups.drafts.length ? "drafts" : groups.scheduled.length ? "scheduled" : "live";
-  const items = groups[tab];
-  // Stage-aware retention copy for the delete dialog, from this user's real activity
-  const context = tab === "drafts" && items.length ? await getRetentionContext(user.id, posts, user.timezone, user.weekly_goal) : null;
-  // Journey rail: real progress + how the scheduled queue moves it forward
-  const stats = computeStats(posts, user.timezone, user.weekly_goal);
-  const journey = await getMilestones(user.id, user.timezone);
+  // Stage-aware retention copy for the delete dialog (drafts only), reusing the milestones already loaded
+  const context = groups.drafts.length ? await getRetentionContext(user.id, posts, user.timezone, user.weekly_goal, journey) : null;
   const postedDays = new Set(posts.filter((p) => p.status === "posted" && !p.simulated && p.posted_at).map((p) => new Date(p.posted_at!).toISOString().slice(0, 10)));
   const scheduledDays = new Set(
     groups.scheduled.filter((p) => p.scheduled_at).map((p) => new Date(p.scheduled_at!).toISOString().slice(0, 10)).filter((d) => !postedDays.has(d)),
@@ -220,49 +214,19 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 
         <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
         <section className="min-w-0">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-1 flex-wrap gap-2 rounded-full border border-line bg-surface p-1.5 sm:inline-flex sm:flex-none">
-            {TABS.map(({ key, label, icon: Icon }) => {
-              const active = tab === key;
-              return (
-                <Link
-                  key={key}
-                  href={`/app?tab=${key}${layout === "grid" ? "&view=grid" : ""}`}
-                  className={`flex h-10 flex-1 items-center justify-center gap-2 rounded-full px-4 text-sm font-medium transition sm:flex-none ${active ? "bg-vivid text-white" : "text-muted hover:bg-hover hover:text-ink"}`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {label}
-                  <span className={`rounded-full px-2 text-[11px] font-semibold ${active ? "bg-white/15" : "bg-hover text-ink-2"}`}>{groups[key].length}</span>
-                </Link>
-              );
-            })}
-          </div>
-          <div className="flex items-center gap-1 rounded-full border border-line bg-surface p-1" role="group" aria-label="Layout">
-            {([["list", List, "List view"], ["grid", LayoutGrid, "Grid view"]] as const).map(([v, Icon, label]) => (
-              <Link
-                key={v}
-                href={`/app?tab=${tab}${v === "grid" ? "&view=grid" : ""}`}
-                aria-label={label}
-                title={label}
-                aria-current={layout === v ? "true" : undefined}
-                className={`grid h-9 w-9 place-items-center rounded-full transition ${layout === v ? "bg-brand-soft text-brand-ink" : "text-muted hover:bg-hover hover:text-ink"}`}
-              >
-                <Icon className="h-4 w-4" />
-              </Link>
-            ))}
-          </div>
-          </div>
-          <p className="mt-2 px-2 text-[13px] text-muted">{TABS.find((t) => t.key === tab)!.hint}</p>
-
-          {items.length && layout === "grid" ? (
-            <div className="mt-3 grid gap-3 sm:grid-cols-2 2xl:grid-cols-3">
-              {items.map((p) => <Card key={p.id} p={p} tz={user.timezone} context={context} />)}
-            </div>
-          ) : (
-            <div className="card mt-3 p-2 sm:p-3">
-              {items.length ? items.map((p) => <Row key={p.id} p={p} tz={user.timezone} context={context} />) : <Empty tab={tab} drafts={groups.drafts.length} scheduled={groups.scheduled.length} />}
-            </div>
-          )}
+          <PostsBoard
+            initialTab={tab}
+            initialLayout={layout}
+            tabs={TABS.map(({ key, label, hint }) => ({
+              key,
+              label,
+              hint,
+              count: groups[key].length,
+              rows: groups[key].map((p) => <Row key={p.id} p={p} tz={user.timezone} context={context} />),
+              cards: groups[key].map((p) => <Card key={p.id} p={p} tz={user.timezone} context={context} />),
+              empty: <Empty tab={key} drafts={groups.drafts.length} scheduled={groups.scheduled.length} />,
+            }))}
+          />
         </section>
           <JourneyRail list={journey.list} next={journey.next} days={journey.days} dailyStreak={journey.dailyStreak} scheduledDays={scheduledDays} />
         </div>
