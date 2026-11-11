@@ -128,8 +128,8 @@ export function GuidePage({ state }: { state: Onboarding }) {
             <Row n={1} title="Copy the Cadence connector link" meta="5 sec" desc="It’s the same link for everyone. Your login keeps your posts private.">
               <CopyField value={MCP_URL()} label="Copy link" />
             </Row>
-            <Row n={2} title="Open Claude’s connector settings" meta="10 sec" desc={<>In <b className="text-ink-2">claude.ai</b> or the Claude desktop app, click your name (bottom-left), then <b className="text-ink-2">Settings → Connectors</b>.</>} />
-            <Row n={3} title="Add a custom connector" meta="15 sec" desc={<>Click <b className="text-ink-2">Add custom connector</b>. Name: <b className="text-ink-2">Cadence</b>. URL: paste the link. Click <b className="text-ink-2">Add</b>. On the Free plan you can have one custom connector, so remove any old one first.</>} />
+            <Row n={2} title="Open Claude’s connector settings" meta="10 sec" desc={<>In <b className="text-ink-2">claude.ai</b> or the Claude desktop app, click <b className="text-ink-2">Customize</b> in the left sidebar, then the <b className="text-ink-2">Connectors</b> tab.</>} />
+            <Row n={3} title="Add a custom connector" meta="15 sec" desc={<>Click <b className="text-ink-2">+ Add → Add custom connector</b>. Name: <b className="text-ink-2">Cadence</b>. URL: paste the link. Click <b className="text-ink-2">Add</b>. On the Free plan you can have one custom connector, so remove any old one first.</>} />
             <Row n={4} title="Click “Connect” and choose your Cadence account" meta="20 sec" desc={<>A Cadence window opens. <b className="text-ink-2">Sign in with the Cadence account you want Claude to save to</b> (this one: {state.email}). Check the account card, then click Connect. The window closes by itself.</>} />
             <Row n={5} title="Switch Cadence on in your chat" meta="5 sec" desc={<>In a new chat, click the <b className="text-ink-2">+</b> / tools icon under the message box and make sure <b className="text-ink-2">Cadence</b> is on.</>}>
               <StatusPill done={state.claude} label={state.claude ? "Claude connected" : "Waiting for Claude"} />
@@ -208,7 +208,7 @@ export function GuideChecklist({ state }: { state: Onboarding }) {
       icon: <ClaudeMark className="h-5 w-5" />,
       tone: "bg-claude-soft text-claude",
       t: "Connect Claude",
-      d: "Add one link in Claude → Settings → Connectors",
+      d: "Add one link in Claude → Customize → Connectors",
       cta: <Link href="/app/welcome" className="btn-primary h-9 px-4 text-[13px]">Show me how</Link>,
     },
     {

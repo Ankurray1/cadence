@@ -19,7 +19,7 @@ export function ConnectSteps() {
         <div className="min-w-0 flex-1">
           <div className="font-medium">Add it to Claude</div>
           <p className="mt-1 text-[13px] leading-relaxed text-muted">
-            In <b className="text-ink-2">claude.ai</b> or the Claude app: <b className="text-ink-2">Settings → Connectors → Add custom connector</b>. Paste the URL, name it <b className="text-ink-2">Cadence</b>, click <b className="text-ink-2">Add</b>, then <b className="text-ink-2">Connect</b>. Sign in with the <b className="text-ink-2">Cadence account you want Claude to save to</b> and confirm it on the account card. That’s it.
+            In <b className="text-ink-2">claude.ai</b> or the Claude app: <b className="text-ink-2">Customize → Connectors → + Add → Add custom connector</b>. Paste the URL, name it <b className="text-ink-2">Cadence</b>, click <b className="text-ink-2">Add</b>, then <b className="text-ink-2">Connect</b>. Sign in with the <b className="text-ink-2">Cadence account you want Claude to save to</b> and confirm it on the account card. That’s it.
           </p>
         </div>
       </li>

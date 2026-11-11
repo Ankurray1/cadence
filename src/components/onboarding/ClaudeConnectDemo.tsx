@@ -9,8 +9,8 @@ import { ClaudeMark, LogoMark } from "../Logo";
  * Pure React + CSS. No video, so it stays crisp and loads instantly.
  */
 const FRAMES = [
-  { caption: "Open Claude → Settings → Connectors", ms: 2600 },
-  { caption: "Click “Add custom connector”", ms: 2200 },
+  { caption: "Open Claude → Customize → Connectors", ms: 2600 },
+  { caption: "Click + Add → “Add custom connector”", ms: 2200 },
   { caption: "Name it Cadence, paste the link, click Add", ms: 3600 },
   { caption: "Click Connect, then confirm your Cadence account", ms: 3000 },
   { caption: "Done! Cadence is ready in every chat", ms: 2800 },

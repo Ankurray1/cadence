@@ -25,7 +25,7 @@ function WrongAccount({ exists, viewerEmail, id }: { exists: boolean; viewerEmai
             </p>
             <div className="mt-5 rounded-2xl bg-claude-soft p-4 text-left text-[13px] leading-relaxed text-ink-2">
               <div className="mb-1 flex items-center gap-2 font-semibold text-claude"><ClaudeMark className="h-4 w-4" /> Saved from Claude?</div>
-              Claude’s Cadence connector may be linked to a different account. In Claude, open <b>Settings → Connectors → Cadence</b>, click <b>Disconnect</b>, then <b>Connect</b> and confirm the account card shows {viewerEmail}.
+              Claude’s Cadence connector may be linked to a different account. In Claude, open <b>Customize → Connectors → Cadence</b>, click <b>Disconnect</b>, then <b>Connect</b> and confirm the account card shows {viewerEmail}.
             </div>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
               <form action="/api/auth/logout" method="post">

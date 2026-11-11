@@ -10,9 +10,9 @@ There is **no AI inside Cadence**: no OpenAI, Anthropic or other AI keys anywher
 
 You don't need an account first. Claude walks you through signing in.
 
-1. In claude.ai or the Claude app, go to **Settings → Connectors → Add custom connector**.
+1. In claude.ai or the Claude app, click **Customize** in the left sidebar, open the **Connectors** tab, then **+ Add → Add custom connector**.
 2. Name it **Cadence**, set the URL to `https://cadence-for-claude.vercel.app/api/mcp`, and click **Add**.
-3. Click **Connect**. A Cadence window opens: sign in with LinkedIn or email (or create an account), then click **Allow access**. Done.
+3. Click **Connect**. A Cadence window opens: sign in with LinkedIn or email (or create an account), then click **Allow**. Done.
 4. First prompt: *"Help me write a LinkedIn post about the biggest lesson from my last project. When it's final, save it to Cadence as a draft."*
 
 Under the hood this is the standard MCP OAuth flow: protected-resource metadata, dynamic client registration, authorization code with PKCE, and refresh tokens. Custom connectors work on Free (1 connector), Pro, Max, Team and Enterprise.

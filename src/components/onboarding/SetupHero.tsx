@@ -74,8 +74,8 @@ function StuckHelp({ firstName }: { firstName: string }) {
         <div className="space-y-2 border-t border-apricot/30 px-4 py-3 text-ink-2">
           <p>Claude is probably still linked to a <b>different Cadence account</b> from before, so it reused that connection instead of asking you to sign in.</p>
           <ol className="list-decimal space-y-1 pl-5">
-            <li>In Claude → <b>Settings → Connectors</b>, open <b>Cadence</b> → <b>⋯</b> → <b>Remove</b>.</li>
-            <li>Click <b>Add custom connector</b> again, paste your Cadence link, click <b>Add</b>.</li>
+            <li>In Claude → <b>Customize → Connectors</b>, open <b>Cadence</b> → <b>⋯</b> → <b>Remove</b>.</li>
+            <li>Click <b>+ Add → Add custom connector</b> again, paste your Cadence link, click <b>Add</b>.</li>
             <li>Click <b>Connect</b>. On the Cadence screen, make sure the card says <b>{firstName}</b>. If not, click “Use a different one”.</li>
           </ol>
         </div>
@@ -238,8 +238,8 @@ export function SetupHero({ firstName, linkedin, claude, firstPost, isDemo, mcpU
                   <div className="min-w-0 flex-1">
                     <div className="font-semibold">Paste it in Claude</div>
                     <ol className="mt-2 space-y-1.5 text-[14px] text-ink-2">
-                      <li><span className="text-muted">1.</span> Claude → <b>Settings → Connectors</b></li>
-                      <li><span className="text-muted">2.</span> <b>Add custom connector</b>, name it <b>Cadence</b>, paste the link, click <b>Add</b></li>
+                      <li><span className="text-muted">1.</span> Claude → <b>Customize → Connectors</b></li>
+                      <li><span className="text-muted">2.</span> <b>+ Add → Add custom connector</b>, name it <b>Cadence</b>, paste the link, click <b>Add</b></li>
                       <li><span className="text-muted">3.</span> Click <b>Connect</b> and confirm <b>{firstName}’s</b> account</li>
                     </ol>
                     <a href="https://claude.ai/settings/connectors" target="_blank" rel="noreferrer" className="btn-primary mt-4 h-11 px-5">
