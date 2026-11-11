@@ -61,6 +61,7 @@ function Row({ p, tz, context }: { p: Post; tz: string; context: RetentionContex
         <ScheduleTimeButton id={p.id} scheduledAt={new Date(p.scheduled_at).toISOString()} label={fmtWhen(p.scheduled_at, tz)} sub={relative(p.scheduled_at)} />
       )}
       {(p.status === "draft" || p.status === "failed") && <RowMenu id={p.id} title={p.title} hasContent={p.body.trim().length > 0} fromClaude={p.source === "claude"} context={context} />}
+      {p.status === "scheduled" && <RowMenu kind="scheduled" id={p.id} title={p.title} hasContent={p.body.trim().length > 0} fromClaude={p.source === "claude"} context={null} whenLabel={p.scheduled_at ? fmtWhen(p.scheduled_at, tz) : undefined} />}
       {live ? (
         <a href={live} target="_blank" rel="noreferrer" title="View on LinkedIn" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-hover text-muted transition hover:bg-linkedin hover:text-white"><ExternalLink className="h-3.5 w-3.5" /></a>
       ) : (
@@ -96,6 +97,7 @@ function Card({ p, tz, context }: { p: Post; tz: string; context: RetentionConte
           <div className="mr-auto text-[12px] text-faint">{p.status === "posted" ? "Went live" : "Edited"} {relative(when)}</div>
         )}
         {(p.status === "draft" || p.status === "failed") && <RowMenu id={p.id} title={p.title} hasContent={p.body.trim().length > 0} fromClaude={p.source === "claude"} context={context} />}
+      {p.status === "scheduled" && <RowMenu kind="scheduled" id={p.id} title={p.title} hasContent={p.body.trim().length > 0} fromClaude={p.source === "claude"} context={null} whenLabel={p.scheduled_at ? fmtWhen(p.scheduled_at, tz) : undefined} />}
         {live ? (
           <a href={live} target="_blank" rel="noreferrer" title="View on LinkedIn" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-hover text-muted transition hover:bg-linkedin hover:text-white"><ExternalLink className="h-3.5 w-3.5" /></a>
         ) : (

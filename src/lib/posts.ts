@@ -98,7 +98,7 @@ export async function schedulePost(userId: string, id: string, at: string | null
 }
 
 export async function deletePost(userId: string, id: string) {
-  const r = await sql`delete from posts where id = ${id} and user_id = ${userId}`;
+  const r = await sql`delete from posts where id = ${id} and user_id = ${userId} and status <> 'publishing'`; // never delete mid-publish
   return r.count > 0;
 }
 

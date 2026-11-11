@@ -53,7 +53,7 @@ export function ScheduleTimeButton({ id, scheduledAt, label, sub, align = "right
         className={`group/time flex flex-col rounded-xl px-2.5 py-1.5 transition ${align === "left" ? "items-start text-left" : "items-end text-right"} hover:bg-brand-soft/60 ${open ? "bg-brand-soft/60" : ""}`}
       >
         <span className="flex items-center gap-1.5 text-[13px] font-semibold text-brand">
-          <CalendarClock className="h-3.5 w-3.5 opacity-0 transition group-hover/time:opacity-100" />
+          <CalendarClock className="h-3.5 w-3.5 opacity-70 transition group-hover/time:opacity-100" />
           {label}
         </span>
         <span className="text-xs text-faint group-hover/time:text-brand-ink">{open ? "Change schedule" : sub}</span>
